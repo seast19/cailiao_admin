@@ -71,10 +71,11 @@ const actions = {
             return reject("Verification failed, please Login again.");
           }
 
-          const { phone,role } = data;
-
+          const { phone,role,realname } = data;
+          // console.log(data);
           commit("SET_PHONE", phone);
           commit("SET_ROLE", role);
+          commit("SET_NAME", realname);
           // commit('SET_AVATAR', avatar)
           resolve(data);
         })

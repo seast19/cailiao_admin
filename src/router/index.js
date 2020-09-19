@@ -94,30 +94,46 @@ export const constantRoutes = [
     redirect: "/material/placeinfo",
     alwaysShow: true,
     name: "Material",
-    meta: { title: "材料管理", icon: "el-icon-s-shop", roles: ["editor","admin"] },
+    meta: { title: "材料管理", icon: "el-icon-s-shop", roles: ["editor", "admin"] },
     children: [
+      // 货架相关
       {
         path: "placeinfo",
         name: "PlaceInfo",
-        component: () => import("@/views/material/placeinfo.vue"),
+        component: () => import("@/views/place/placeinfo.vue"),
         meta: { title: "货架信息", icon: "el-icon-box" }
       },
       {
         path: "placeadd",
         hidden: true,
         name: "PlaceAdd",
-        component: () => import("@/views/material/placeadd.vue"),
+        component: () => import("@/views/place/placeadd.vue"),
         meta: { title: "添加货架" }
       },
       {
         path: "placeedit/:id",
         hidden: true,
         name: "PlaceEdit",
-        component: () => import("@/views/material/placeedit.vue"),
+        component: () => import("@/views/place/placeedit.vue"),
         meta: { title: "编辑货架" }
-      }
+      },
+      // 材料相关
+      {
+        path: "materialinfo",
+        name: "MaterialInfo",
+        component: () => import("@/views/material/info.vue"),
+        meta: { title: "材料信息", icon: "el-icon-box" }
+      },
+      {
+        path: "materialadd",
+        hidden: true,
+        name: "MaterialAdd",
+        component: () => import("@/views/material/add.vue"),
+        meta: { title: "添加材料" }
+      },
     ]
   },
+
 
   {
     path: "/example",

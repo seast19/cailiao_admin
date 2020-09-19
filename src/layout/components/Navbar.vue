@@ -18,7 +18,7 @@
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <el-dropdown-item disabled>{{this.$store.state.user.phone}}</el-dropdown-item>
+          <el-dropdown-item disabled>{{this.$store.state.user.name}}</el-dropdown-item>
           <!-- <router-link to="/">
             <el-dropdown-item>
               首页
