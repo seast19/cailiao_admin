@@ -119,11 +119,12 @@ export default {
       let page = e || 1;
       this.loading = true;
       await request({
-        url: `/places`,
+        url: `/material`,
         method: "get",
         params: {
           page: page,
-          per_page: 8
+          per_page: 8,
+          place_id:0
         }
       })
         .then(res => {
