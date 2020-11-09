@@ -110,7 +110,11 @@ export default {
     },
     // 返回上一页
     goBack() {
-      this.$router.go(-1);
+      // this.$router.go(-1);
+      this.$router.push({
+        name: "UserInfo",
+        params: { page: this.$route.params.page }
+      });
     },
     // 重置
     reset() {

@@ -3,7 +3,10 @@
     <!-- 搜索 -->
     <el-form :inline="true" :model="formInline">
       <el-form-item label>
-        <el-input v-model="formInline.search" placeholder="姓名或手机号"></el-input>
+        <el-input
+          v-model="formInline.search"
+          placeholder="姓名或手机号"
+        ></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSearch">搜索</el-button>
@@ -14,7 +17,7 @@
     </el-form>
 
     <!-- 表格 -->
-    <el-table :data="tableData" style="width: 100%">
+    <el-table :data="tableData" style="width: 100%" size="mini">
       <el-table-column label="ID" width="180" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.ID }}</span>
@@ -38,9 +41,16 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-popconfirm title="真的删除吗？" @onConfirm="handleDelete(scope.$index, scope.row)">
-            <el-button size="mini" type="danger" slot="reference">删除</el-button>
+          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
+            >编辑</el-button
+          >
+          <el-popconfirm
+            title="真的删除吗？"
+            @onConfirm="handleDelete(scope.$index, scope.row)"
+          >
+            <el-button size="mini" type="danger" slot="reference"
+              >删除</el-button
+            >
           </el-popconfirm>
         </template>
       </el-table-column>
@@ -70,32 +80,36 @@ export default {
 
       loading: false,
       formInline: {
-        search: "",
+        search: ""
       },
-      tableData: [],
+      tableData: []
     };
   },
   methods: {
     // 跳转编辑用户界面
     handleEdit(index, row) {
-      this.$router.push({ name: "UserEdit", params: { id: row.ID } });
+      this.$router.push({
+        name: "UserEdit",
+        query: { id: row.ID },
+        params: { page: this.currentPage }
+      });
     },
     // 删除用户
     async handleDelete(index, row) {
       this.loading = true;
       await request({
         url: `/users/${row.ID}`,
-        method: "delete",
+        method: "delete"
       })
-        .then((res) => {
+        .then(res => {
           this.$message({
             message: "删除成功",
-            type: "success",
+            type: "success"
           });
 
           this.getUser(this.currentPage);
         })
-        .catch((e) => {
+        .catch(e => {
           console.log(e);
         });
 
@@ -105,27 +119,30 @@ export default {
       console.log("submit!");
     },
     onAddUser() {
-      this.$router.push("/user/add");
+      // this.$router.push("/user/add");
+      this.$router.push({
+        name: "UserAdd",
+        params: { page: this.currentPage }
+      });
     },
     // 获取用户列表
-    async getUser(e) {
-      let page = e || 1;
+    async getUser() {
       this.loading = true;
       await request({
         url: `/users`,
         method: "get",
         params: {
-          page: page,
-          per_page: 8,
-        },
+          page: this.currentPage,
+          per_page: 8
+        }
       })
-        .then((res) => {
+        .then(res => {
           // console.log(res.data);
           this.tableData = res.data.users;
           this.total = res.data.count;
           this.currentPage = res.data.page;
         })
-        .catch((e) => {});
+        .catch(e => {});
 
       this.loading = false;
     },
@@ -133,13 +150,17 @@ export default {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
+      this.currentPage = val;
       //   console.log(`当前页: ${val}`);
-      this.getUser(val);
-    },
+      this.getUser();
+    }
   },
   created() {
+    if (this.$route.params.page) {
+      this.currentPage = this.$route.params.page;
+    }
     this.getUser();
-  },
+  }
 };
 </script>
 

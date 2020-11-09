@@ -79,7 +79,7 @@ export const constantRoutes = [
         meta: { title: "添加用户" }
       },
       {
-        path: "edit/:id",
+        path: "edit",
         hidden: true,
         name: "UserEdit",
         component: () => import("@/views/user/edit.vue"),
@@ -87,31 +87,31 @@ export const constantRoutes = [
       }
     ]
   },
-  // 材料管理
+  // 材料信息管理
   {
     path: "/material",
     component: Layout,
-    redirect: "/material/placeinfo",
+    redirect: "/material/place/info",
     alwaysShow: true,
     name: "Material",
-    meta: { title: "材料管理", icon: "el-icon-s-shop", roles: ["editor", "admin"] },
+    meta: { title: "材料信息", icon: "el-icon-s-shop", roles: ["editor", "admin"] },
     children: [
       // 货架相关
       {
-        path: "placeinfo",
+        path: "place/info",
         name: "PlaceInfo",
         component: () => import("@/views/place/placeinfo.vue"),
         meta: { title: "货架信息", icon: "el-icon-box" }
       },
       {
-        path: "placeadd",
+        path: "place/add",
         hidden: true,
         name: "PlaceAdd",
         component: () => import("@/views/place/placeadd.vue"),
         meta: { title: "添加货架" }
       },
       {
-        path: "placeedit/:id",
+        path: "place/edit",
         hidden: true,
         name: "PlaceEdit",
         component: () => import("@/views/place/placeedit.vue"),
@@ -119,18 +119,80 @@ export const constantRoutes = [
       },
       // 材料相关
       {
-        path: "materialinfo",
+        path: "material/info",
         name: "MaterialInfo",
         component: () => import("@/views/material/info.vue"),
         meta: { title: "材料信息", icon: "el-icon-box" }
       },
       {
-        path: "materialadd",
+        path: "material/add",
         hidden: true,
         name: "MaterialAdd",
         component: () => import("@/views/material/add.vue"),
         meta: { title: "添加材料" }
       },
+      {
+        path: "material/edit",
+        hidden: true,
+        name: "MaterialEdit",
+        component: () => import("@/views/material/edit.vue"),
+        meta: { title: "编辑材料" }
+      },
+    ]
+  },
+
+
+  // 出入库管理
+  {
+    path: "/records",
+    component: Layout,
+    redirect: "/records/send/info",
+    alwaysShow: true,
+    name: "Records",
+    meta: { title: "出入库", icon: "el-icon-s-shop", roles: ["editor", "admin"] },
+    children: [
+      // 发料
+      {
+        path: "send/info",
+        name: "SendInfo",
+        component: () => import("@/views/records/sendinfo.vue"),
+        meta: { title: "发料", icon: "el-icon-box" }
+      },
+      {
+        path: "send/add",
+        hidden: true,
+        name: "SendAdd",
+        component: () => import("@/views/records/sendadd.vue"),
+        meta: { title: "发料详细" }
+      },
+      // {
+      //   path: "placeedit/:id",
+      //   hidden: true,
+      //   name: "PlaceEdit",
+      //   component: () => import("@/views/place/placeedit.vue"),
+      //   meta: { title: "编辑货架" }
+      // },
+      // 材料相关
+      // {
+      //   path: "materialinfo",
+      //   name: "MaterialInfo",
+      //   component: () => import("@/views/material/info.vue"),
+      //   meta: { title: "材料信息", icon: "el-icon-box" }
+      // },
+      // {
+      //   path: "materialadd",
+      //   hidden: true,
+      //   name: "MaterialAdd",
+      //   component: () => import("@/views/material/add.vue"),
+      //   meta: { title: "添加材料" }
+      // },
+      // {
+      //   path: "materialedit",
+      //   hidden: true,
+      //   name: "MaterialEdit",
+      //   component: () => import("@/views/material/edit.vue"),
+      //   meta: { title: "编辑材料" }
+      // },
     ]
   },
 

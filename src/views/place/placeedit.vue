@@ -24,7 +24,6 @@
         <el-input v-model="form.remark" autocomplete="off"></el-input>
       </el-form-item>
 
-     
       <el-form-item>
         <el-button type="primary" @click="submitForm('form')"
           >立即更新</el-button
@@ -44,12 +43,11 @@ export default {
       form: {
         id: "",
         position: "",
-        remark: "",
-       
+        remark: ""
       },
       rules: {
         position: [
-          { require:true, message: "请输入货架位置", trigger: "blur" }
+          { require: true, message: "请输入货架位置", trigger: "blur" }
         ]
       }
     };
@@ -65,8 +63,7 @@ export default {
             url: `/places/${this.form.id}`,
             data: {
               position: this.form.position,
-              remarks: this.form.remark,
-             
+              remarks: this.form.remark
             }
           })
             .then(res => {
@@ -86,11 +83,15 @@ export default {
       });
     },
     goBack() {
-      this.$router.go(-1);
+      // this.$router.go(-1);
+      this.$router.push({
+        name: "PlaceInfo",
+        params: { page: this.$route.params.page }
+      });
     },
     //   获取用户信息
     getUser() {
-      let id = this.$route.params.id;
+      let id = this.$route.query.id;
       this.loading = true;
       request({
         method: "get",
@@ -101,8 +102,7 @@ export default {
           this.form = {
             id: res.data.ID,
             position: res.data.Position,
-            remark: res.data.Remarks,
-           
+            remark: res.data.Remarks
           };
         })
         .catch(e => {

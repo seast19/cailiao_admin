@@ -3,10 +3,7 @@
     <!-- 搜索 -->
     <el-form :inline="true" :model="formInline">
       <el-form-item label="">
-        <el-input
-          v-model="formInline.search"
-          placeholder="货架名称"
-        ></el-input>
+        <el-input v-model="formInline.search" placeholder="货架名称"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSearch">搜索</el-button>
@@ -17,7 +14,7 @@
     </el-form>
 
     <!-- 表格 -->
-    <el-table :data="tableData" style="width: 100%">
+    <el-table :data="tableData" style="width: 100%" size="mini">
       <el-table-column label="ID" width="180" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.ID }}</span>
@@ -34,7 +31,7 @@
           <span>{{ scope.row.Remarks }}</span>
         </template>
       </el-table-column>
-      
+
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
@@ -56,8 +53,8 @@
       style="margin-top:20px"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="currentPage"  
-      :page-size="8"   
+      :current-page="currentPage"
+      :page-size="8"
       layout="total,  prev, pager, next, jumper"
       :total="total"
     >
@@ -85,7 +82,11 @@ export default {
   methods: {
     // 跳转编辑用户界面
     handleEdit(index, row) {
-      this.$router.push({ name: "PlaceEdit", params: { id: row.ID } });
+      this.$router.push({
+        name: "PlaceEdit",
+        query: { id: row.ID },
+        params: { page: this.currentPage }
+      });
     },
     // 删除用户
     async handleDelete(index, row) {
@@ -112,17 +113,19 @@ export default {
       console.log("submit!");
     },
     onAddUser() {
-      this.$router.push({ name: "PlaceAdd"});
+      this.$router.push({
+        name: "PlaceAdd",
+        params: { page: this.currentPage }
+      });
     },
     // 获取用户列表
-    async getUser(e) {
-      let page = e || 1;
+    async getUser() {
       this.loading = true;
       await request({
         url: `/places`,
         method: "get",
         params: {
-          page: page,
+          page: this.currentPage,
           per_page: 8
         }
       })
@@ -132,7 +135,9 @@ export default {
           this.total = res.data.count;
           this.currentPage = res.data.page;
         })
-        .catch(e => {});
+        .catch(e => {
+          console.log(e);
+        });
 
       this.loading = false;
     },
@@ -141,10 +146,14 @@ export default {
     },
     handleCurrentChange(val) {
       //   console.log(`当前页: ${val}`);
-      this.getUser(val);
+      this.currentPage = val;
+      this.getUser();
     }
   },
   created() {
+    if (this.$route.params.page) {
+      this.currentPage = this.$route.params.page;
+    }
     this.getUser();
   }
 };

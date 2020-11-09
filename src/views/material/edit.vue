@@ -1,8 +1,9 @@
 <template>
   <div style="padding:20px">
     <!-- 页头 -->
-    <el-page-header @back="goBack" content="添加材料"> </el-page-header>
+    <el-page-header @back="goBack" content="编辑材料"> </el-page-header>
 
+    <!-- 表单 -->
     <!-- 表单 -->
     <el-form
       size="small"
@@ -85,7 +86,7 @@
           <p style="color:#f56c6c">常用符号：×</p>
           <el-form-item>
             <el-button type="primary" @click="submitForm('form')"
-              >立即创建</el-button
+              >立即更新</el-button
             >
             <el-button @click="reset()">重置</el-button>
           </el-form-item>
@@ -98,13 +99,15 @@
 <script>
 import request from "@/utils/request";
 export default {
-  name: "MaterialAdd",
+  name: "MaterialEdit",
   data() {
     return {
+      loading: false,
+
       places: [], //所有货架位置
 
-      loading: false,
       form: {
+        id: "",
         name: "", //名称
         model: "", //型号
         nickname: "", //俗称
@@ -128,13 +131,14 @@ export default {
     };
   },
   methods: {
+    //   更新材料
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.loading = true;
           request({
-            method: "post",
-            url: "/material",
+            method: "put",
+            url: `/material/id/${this.form.id}`,
             data: {
               name: this.form.name,
               model: this.form.model,
@@ -154,15 +158,12 @@ export default {
             .then(res => {
               this.loading = false;
               this.$message({
-                message: "添加成功",
+                message: "修改成功",
                 type: "success"
               });
-
-              setTimeout(() => {
-                this.goBack();
-              }, 100);
             })
             .catch(e => {
+              console.log(e);
               this.loading = false;
             });
         } else {
@@ -170,14 +171,13 @@ export default {
         }
       });
     },
-    // 返回上一页
     goBack() {
+      // this.$router.go(-1);
       this.$router.push({
         name: "MaterialInfo",
         params: { page: this.$route.params.page }
       });
     },
-    // 重置
     reset() {
       this.form = {
         name: "", //名称
@@ -195,6 +195,38 @@ export default {
         marks: "" //备注
       };
     },
+    //   获取用户信息
+    getUser() {
+      let id = this.$route.query.id;
+      this.loading = true;
+      request({
+        method: "get",
+        url: `/material/id/${id}`
+      })
+        .then(res => {
+          this.loading = false;
+          this.form = {
+            id: res.data.ID,
+            name: res.data.Name, //名称
+            model: res.data.Model, //型号
+            nickname: res.data.NickName, //俗称
+
+            placeID: res.data.PlaceID, //货架id
+            floor: res.data.Floor, //层
+            location: res.data.Location, //位
+
+            count: res.data.Count, //数量
+            prepareCount: res.data.PrepareCount, //常备数量
+            warnCount: res.data.WarnCount, //报警数量
+
+            marks: res.data.Marks //备注
+          };
+        })
+        .catch(e => {
+          this.loading = false;
+          console.log(e);
+        });
+    },
 
     // 获取货架
     getPlaceAll() {
@@ -203,7 +235,7 @@ export default {
         url: "/placesall"
       })
         .then(res => {
-          // console.log(res);
+          console.log(res);
           if (res.code === 2000) {
             this.places = res.data.reverse();
           } else {
@@ -218,13 +250,9 @@ export default {
   },
   created() {
     this.getPlaceAll();
+    this.getUser();
   }
 };
 </script>
-<style scoped>
-.mytip {
-  color: #c0c4cc;
-  margin: 10px 0 10px 0;
-  padding-left: 80px;
-}
-</style>
+
+<style scoped></style>

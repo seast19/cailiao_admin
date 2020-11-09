@@ -103,11 +103,15 @@ export default {
       });
     },
     goBack() {
-      this.$router.go(-1);
+      // this.$router.go(-1);
+      this.$router.push({
+        name: "UserInfo",
+        params: { page: this.$route.params.page }
+      });
     },
     //   获取用户信息
     getUser() {
-      let id = this.$route.params.id;
+      let id = this.$route.query.id;
       this.loading = true;
       request({
         method: "get",

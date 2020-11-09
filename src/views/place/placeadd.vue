@@ -85,7 +85,10 @@ export default {
     },
     // 返回上一页
     goBack() {
-      this.$router.go(-1);
+      this.$router.push({
+        name: "PlaceInfo",
+        params: { page: this.$route.params.page }
+      });
     },
     // 重置
     reset() {

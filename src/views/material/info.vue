@@ -9,33 +9,82 @@
         ></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSearch">搜索</el-button>
+        <el-button type="primary" @click="onSearch" disabled>搜索</el-button>
       </el-form-item>
       <el-form-item>
         <el-button type="success" @click="onAddUser">添加材料</el-button>
       </el-form-item>
+      <el-form-item>
+        <el-button disabled>批量导入</el-button>
+      </el-form-item>
     </el-form>
 
     <!-- 表格 -->
-    <el-table :data="tableData" style="width: 100%">
-      <el-table-column label="ID" width="180" align="center">
+    <el-table
+      :data="tableData"
+      style="width: 100%"
+      :stripe="true"
+      :size="'mini'"
+    >
+      <el-table-column label="ID" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.ID }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="位置" width="180 " align="center">
+
+      <el-table-column label="名称" width="130" align="center">
         <template slot-scope="scope">
           <!-- <i class="el-icon-time"></i> -->
-          <span>{{ scope.row.Position }}</span>
+          <el-tooltip
+            effect="dark"
+            :content="'俗称：' + scope.row.NickName"
+            :disabled="!scope.row.NickName"
+          >
+            <span>{{ scope.row.Name }}</span>
+          </el-tooltip>
         </template>
       </el-table-column>
+
+      <el-table-column label="型号" width="150" align="center">
+        <template slot-scope="scope">
+          <!-- <i class="el-icon-time"></i> -->
+          <span>{{ scope.row.Model }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="位置" width="130" align="center">
+        <template slot-scope="scope">
+          <!-- <i class="el-icon-time"></i> -->
+          <span>{{ scope.row.Place.Position }}</span
+          ><span> ({{ scope.row.Floor }}层 {{ scope.row.Location }}位)</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="实时数量" align="center">
+        <template slot-scope="scope">
+          <!-- <i class="el-icon-time"></i> -->
+          <span>{{ scope.row.Count }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="常备数量" align="center">
+        <template slot-scope="scope">
+          <!-- <i class="el-icon-time"></i> -->
+          <span>{{ scope.row.PrepareCount }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="报警数量" align="center">
+        <template slot-scope="scope">
+          <!-- <i class="el-icon-time"></i> -->
+          <span>{{ scope.row.WarnCount }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column label="备注" width="180" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.Remarks }}</span>
+          <span>{{ scope.row.Marks }}</span>
         </template>
       </el-table-column>
-      
-      <el-table-column label="操作" align="center">
+
+      <el-table-column label="操作" width="150" align="center">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
             >编辑</el-button
@@ -51,13 +100,14 @@
         </template>
       </el-table-column>
     </el-table>
+
     <!-- 分页 -->
     <el-pagination
       style="margin-top:20px"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="currentPage"  
-      :page-size="8"   
+      :current-page="currentPage"
+      :page-size="8"
       layout="total,  prev, pager, next, jumper"
       :total="total"
     >
@@ -83,15 +133,19 @@ export default {
     };
   },
   methods: {
-    // 跳转编辑用户界面
+    // 跳转编辑材料界面
     handleEdit(index, row) {
-      this.$router.push({ name: "PlaceEdit", params: { id: row.ID } });
+      this.$router.push({
+        name: "MaterialEdit",
+        query: { id: row.ID },
+        params: { page: this.currentPage }
+      });
     },
-    // 删除用户
+    // 删除材料
     async handleDelete(index, row) {
       this.loading = true;
       await request({
-        url: `/places/${row.ID}`,
+        url: `/material/id/${row.ID}`,
         method: "delete"
       })
         .then(res => {
@@ -112,24 +166,26 @@ export default {
       console.log("submit!");
     },
     onAddUser() {
-      this.$router.push({ name: "MaterialAdd"});
+      this.$router.push({
+        name: "MaterialAdd",
+        params: { page: this.currentPage }
+      });
     },
-    // 获取用户列表
-    async getUser(e) {
-      let page = e || 1;
+    // 获取材料列表
+    async getUser() {
       this.loading = true;
       await request({
         url: `/material`,
         method: "get",
         params: {
-          page: page,
+          page: this.currentPage,
           per_page: 8,
-          place_id:0
+          place_id: 0
         }
       })
         .then(res => {
           // console.log(res.data);
-          this.tableData = res.data.places;
+          this.tableData = res.data.materials;
           this.total = res.data.count;
           this.currentPage = res.data.page;
         })
@@ -141,11 +197,15 @@ export default {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
+      this.currentPage = val;
       //   console.log(`当前页: ${val}`);
-      this.getUser(val);
+      this.getUser();
     }
   },
   created() {
+    if (this.$route.params.page) {
+      this.currentPage = this.$route.params.page;
+    }
     this.getUser();
   }
 };
