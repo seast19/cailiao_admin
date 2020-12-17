@@ -25,6 +25,9 @@
           <el-form-item label="型号" prop="model">
             <el-input v-model="form.model"></el-input>
           </el-form-item>
+          <el-form-item label="计量单位" prop="model">
+            <el-input v-model="form.unit"></el-input>
+          </el-form-item>
 
           <el-form-item label="俗称" prop="nickname">
             <el-input
@@ -110,6 +113,7 @@ export default {
         id: "",
         name: "", //名称
         model: "", //型号
+        unit:'',
         nickname: "", //俗称
 
         placeID: "", //货架id
@@ -142,6 +146,7 @@ export default {
             data: {
               name: this.form.name,
               model: this.form.model,
+              unit:this.form.unit,
               nick_name: this.form.nickname,
 
               place_id: this.form.placeID,
@@ -182,6 +187,7 @@ export default {
       this.form = {
         name: "", //名称
         model: "", //型号
+        unit:'',
         nickname: "", //俗称
 
         placeID: "", //货架id
@@ -209,6 +215,7 @@ export default {
             id: res.data.ID,
             name: res.data.Name, //名称
             model: res.data.Model, //型号
+            unit:res.data.Unit,
             nickname: res.data.NickName, //俗称
 
             placeID: res.data.PlaceID, //货架id

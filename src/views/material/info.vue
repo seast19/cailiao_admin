@@ -4,12 +4,13 @@
     <el-form :inline="true" :model="formInline">
       <el-form-item label="">
         <el-input
-          v-model="formInline.search"
+          v-model.trim="formInline.search"
+           clearable
           placeholder="材料名称或型号"
         ></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSearch" disabled>搜索</el-button>
+        <el-button type="primary" @click="onSearch">搜索</el-button>
       </el-form-item>
       <el-form-item>
         <el-button type="success" @click="onAddUser">添加材料</el-button>
@@ -55,14 +56,14 @@
       <el-table-column label="位置" width="130" align="center">
         <template slot-scope="scope">
           <!-- <i class="el-icon-time"></i> -->
-          <span>{{ scope.row.Place.Position }}</span
-          ><span> ({{ scope.row.Floor }}层 {{ scope.row.Location }}位)</span>
+          <p style="margin:0">{{ scope.row.Place.Position }}</p>
+          <span> ({{ scope.row.Floor }}层 {{ scope.row.Location }}位)</span>
         </template>
       </el-table-column>
       <el-table-column label="实时数量" align="center">
         <template slot-scope="scope">
           <!-- <i class="el-icon-time"></i> -->
-          <span>{{ scope.row.Count }}</span>
+          <strong>{{ scope.row.Count }}</strong>
         </template>
       </el-table-column>
       <el-table-column label="常备数量" align="center">
@@ -104,7 +105,6 @@
     <!-- 分页 -->
     <el-pagination
       style="margin-top:20px"
-      @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentPage"
       :page-size="8"
@@ -162,9 +162,29 @@ export default {
 
       this.loading = false;
     },
+    // 搜索
     onSearch() {
-      console.log("submit!");
+      this.loading = true;
+      request({
+        method: "get",
+        url: "/material/s",
+        params: {
+          key: this.formInline.search,
+          page: this.currentPage,
+          per_page: 8
+        }
+      })
+        .then(res => {
+          this.loading = false;
+          this.tableData = res.data;
+          this.total = res.count;
+        })
+        .catch(e => {
+          this.loading = false;
+          console.log(e);
+        });
     },
+    // 跳转添加页面
     onAddUser() {
       this.$router.push({
         name: "MaterialAdd",
@@ -172,41 +192,43 @@ export default {
       });
     },
     // 获取材料列表
-    async getUser() {
-      this.loading = true;
-      await request({
-        url: `/material`,
-        method: "get",
-        params: {
-          page: this.currentPage,
-          per_page: 8,
-          place_id: 0
-        }
-      })
-        .then(res => {
-          // console.log(res.data);
-          this.tableData = res.data.materials;
-          this.total = res.data.count;
-          this.currentPage = res.data.page;
-        })
-        .catch(e => {});
+    // getUser() {
+    //   this.loading = true;
+    //   request({
+    //     url: `/material`,
+    //     method: "get",
+    //     params: {
+    //       page: this.currentPage,
+    //       per_page: 8,
+    //       place_id: 0
+    //     }
+    //   })
+    //     .then(res => {
+    //       // console.log(res.data);
+    //       this.tableData = res.data.materials;
+    //       this.total = res.data.count;
+    //       this.currentPage = res.data.page;
+    //     })
+    //     .catch(e => {});
 
-      this.loading = false;
-    },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-    },
+    //   this.loading = false;
+    // },
+    // handleSizeChange(val) {
+    //   console.log(`每页 ${val} 条`);
+    // },
     handleCurrentChange(val) {
       this.currentPage = val;
       //   console.log(`当前页: ${val}`);
-      this.getUser();
+      this.onSearch();
+      // this.getUser();
     }
   },
   created() {
     if (this.$route.params.page) {
-      this.currentPage = this.$route.params.page;
+      this.currentPage = this.$route.params.page || 1;
     }
-    this.getUser();
+    // this.getUser();
+    this.onSearch();
   }
 };
 </script>

@@ -6,7 +6,7 @@
         <el-input v-model="formInline.search" placeholder="货架名称"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSearch">搜索</el-button>
+        <el-button type="primary" @click="onSearch" disabled>搜索</el-button>
       </el-form-item>
       <el-form-item>
         <el-button type="success" @click="onAddUser">添加货架</el-button>

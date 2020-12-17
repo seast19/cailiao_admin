@@ -37,11 +37,6 @@
           <span>{{ scope.row.Model }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="位置" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.Place.Position }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="实时数量" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.Count }}</span>
@@ -50,8 +45,8 @@
 
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-          <el-button type="success" size="mini" @click="handleEdit(scope.row)"
-            >发料</el-button
+          <el-button type="primary" size="mini" @click="handleEdit(scope.row)"
+            >领料</el-button
           >
         </template>
       </el-table-column>
@@ -78,8 +73,8 @@
     <!-- 操作说明 -->
     <div>
       <p>操作说明：</p>
-      <p>1. 搜索待发料物资</p>
-      <p>2. 在搜索结果中【操作】栏点击【发料】</p>
+      <p>1. 搜索待领料物资</p>
+      <p>2. 在搜索结果中【操作】栏点击【领料】</p>
     </div>
   </div>
 </template>
@@ -87,7 +82,7 @@
 <script>
 import request from "@/utils/request";
 export default {
-  name: "SendInfo",
+  name: "ReceiveInfo",
   data() {
     return {
       currentPage: 1,
@@ -191,7 +186,7 @@ export default {
     handleEdit(row) {
       console.log(row);
       this.$router.push({
-        name: "SendAdd",
+        name: "ReceiveAdd",
         query: { id: row.ID },
         params: { key: this.formInline.search, page: this.currentPage }
       });

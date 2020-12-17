@@ -18,23 +18,23 @@
 
     <!-- 表格 -->
     <el-table :data="tableData" style="width: 100%" size="mini">
-      <el-table-column label="ID" width="180" align="center">
+      <el-table-column label="ID" width="" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.ID }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="姓名" width="180" align="center">
+      <el-table-column label="姓名" width="" align="center">
         <template slot-scope="scope">
           <!-- <i class="el-icon-time"></i> -->
           <span>{{ scope.row.RealName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="手机号" width="180" align="center">
+      <el-table-column label="手机号" width="" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.Phone }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="权限" width="180" align="center">
+      <el-table-column label="权限" width="" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.Role }}</span>
         </template>

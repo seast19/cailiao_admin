@@ -165,6 +165,27 @@ export const constantRoutes = [
         component: () => import("@/views/records/sendadd.vue"),
         meta: { title: "发料详细" }
       },
+      // 领料
+      {
+        path: "receive/info",
+        name: "ReceiveInfo",
+        component: () => import("@/views/records/receiveinfo.vue"),
+        meta: { title: "领料", icon: "el-icon-box" }
+      },
+      {
+        path: "receive/add",
+        hidden: true,
+        name: "ReceiveAdd",
+        component: () => import("@/views/records/receiveadd.vue"),
+        meta: { title: "领料详细" }
+      },
+      // 出入单记录
+      {
+        path: "record/info",
+        name: "RecordInfo",
+        component: () => import("@/views/records/list.vue"),
+        meta: { title: "领发料记录", icon: "el-icon-box" }
+      },
       // {
       //   path: "placeedit/:id",
       //   hidden: true,
